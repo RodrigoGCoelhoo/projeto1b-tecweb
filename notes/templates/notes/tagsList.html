@@ -1,0 +1,47 @@
+{% extends "notes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="appbar">
+    <img src="{% static 'notes/img/logo-getit.png' %}" class="logo" />
+    <span class="subtitle">Como o Post-it, mas com outro verbo</span>
+  </div>
+
+  <main class="container">
+    <div class="tags-window">
+      <div class="header-tags-list">
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="acao" value="voltar" />
+          <button class="button-tags-list" type="submit">
+            <img src="{% static 'notes/img/arrow.png' %}" class="back" />
+          </button>
+        </form>
+        <h1 class="titulo-tag-list">Selecione uma tag</h1>
+      </div>
+      <div class="horiz-div"></div>
+      
+      <div class="tags-list">
+      <form method="post" class="filter_form">
+        {% csrf_token %}
+        <input type="hidden" name="acao" value="filtrar" />
+        <input type="hidden" name="valor_filtro" value="1" />
+        <button class="btn-create-delete-tag" type="submit">
+          <h4 id="filter-tag">Sem tags</h4>
+        </button>
+      </form>
+      {% for tag in tags %}
+        <form method="post" class="filter_form">
+          {% csrf_token %}
+          <input type="hidden" name="acao" value="filtrar" />
+          <input type="hidden" name="valor_filtro" value="{{ tag.id }}" />
+          <button class="btn-create-delete-tag" type="submit">
+            <h4 id="filter-tag">{{ tag.name }}</h4>
+          </button>
+        </form>
+      {% endfor %}
+      </div>
+    </div>
+  </main>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "notes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="appbar">
+    <img src="{% static 'notes/img/logo-getit.png' %}" class="logo" />
+    <span class="subtitle">Como o Post-it, mas com outro verbo</span>
+  </div>
+
+  <main class="container">
+
+    <div class="header-filtered">
+      <div class="back-home">
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="acao" value="voltar" />
+          <button type="submit" class="clean-button">
+            <img src="{% static 'notes/img/arrow.png' %}" class="add-del" />
+          </button>
+        </form>
+        <div class="vert-div"></div>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="acao" value="home" />
+          <button type="submit" class="clean-button">
+            <img src="{% static 'notes/img/home.png' %}" class="add-del" />
+          </button>
+        </form>
+      </div>
+
+      <div class="header-title">
+        {% if thetag.name == 'no_tag' %}
+        <h1>Notes sem tags</h1>
+        {% else %}
+        <h1>{{thetag.name}}</h1>
+        {% endif %}
+      </div>
+   </div>
+
+    <div class="card-container">
+      {% for note in notes %}
+      <div class="card">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="delete" />
+            <input type="hidden" name="note_id" id="hiddenField" value="{{ note.id }}" />
+            <button class="btn-de btn-delete" type="submit"><img src="{% static 'notes/img/trash-can.png' %}" class="delete" /></button>
+          </form> 
+          <div class="text-inputs">
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="acao" value="edit" />
+              <input type="hidden" name="note_id" id="hiddenField" value="{{ note.id }}" />
+              <div class="tag-title">
+                <select id="tag" name="nova_tag" class="new_tag">
+                  {% if note.tag.id == 1%}
+                    <option value="1" selected></option>
+                  {% else %}
+                    <option value="1"> Remover tag </option>
+                  {% endif %}
+                  {% for tag in tags %}
+                    {% if note.tag.id == tag.id %}
+                    <option value="{{ tag.id }}" selected> {{ tag.name }} </option>
+                    {% else %}
+                    <option value="{{ tag.id }}"> {{ tag.name }} </option>
+                    {% endif %}
+                  {% endfor %}
+                  
+                </select>
+                <div class="horiz-div"></div>
+                <textarea class="card-title textarea-input" name="novo_titulo">{{ note.title }}</textarea>
+              </div>
+              <textarea class="textarea-input large-input" name="nova_desc">{{ note.content }}</textarea>
+              <button class="btn-de btn-edit" type="submit"><img src="{% static 'notes/img/pencil.png' %}" class="edit" /></button>
+            </form>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+  </main>
+
+  <script type="text/javascript" src="{% static 'notes/js/getit.js' %}"></script>
+
+{% endblock %}
