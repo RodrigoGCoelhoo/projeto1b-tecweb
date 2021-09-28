@@ -12,6 +12,10 @@ def index(request):
             title = request.POST.get('titulo')
             content = request.POST.get('detalhes')
             tag_name = request.POST.get('tag-input').capitalize()
+            if tag_name == '':
+                new_tag = False
+                tag_name = "No_tag"
+
             all_tags = Tag.objects.all()
             for tag in all_tags:
                 if tag.name == tag_name:
